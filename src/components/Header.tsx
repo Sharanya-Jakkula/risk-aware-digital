@@ -86,10 +86,10 @@ const Header = ({ lang, onToggleLang, onAnalyzeClick }: HeaderProps) => {
           >
             Analyze
           </button>
-          <button onClick={() => navigate("/awareness")} className="transition hover:opacity-80">
+          <button onClick={() => navigate("/statistics")} className="transition hover:opacity-80">
             Stats
           </button>
-          <button onClick={() => navigate("/trends")} className="transition hover:opacity-80">
+          <button onClick={() => navigate("/contact")} className="transition hover:opacity-80">
             Contact
           </button>
         </div>
@@ -146,19 +146,19 @@ const Header = ({ lang, onToggleLang, onAnalyzeClick }: HeaderProps) => {
                   </button>
 
                   <button
+                    onClick={() => handleMenuClick("/report")}
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition"
+                  >
+                    <ShieldAlert size={16} />
+                    {t.reportTitle}
+                  </button>
+
+                  <button
                     onClick={() => handleMenuClick("/reporting-guide")}
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition"
                   >
                     <HelpCircle size={16} />
                     {t.menuReportingGuide}
-                  </button>
-
-                  <button
-                    onClick={() => handleMenuClick("/about")}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition"
-                  >
-                    <HelpCircle size={16} />
-                    {t.menuAbout}
                   </button>
 
                 </div>
