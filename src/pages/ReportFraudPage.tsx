@@ -27,6 +27,8 @@ const ReportFraudPage = () => {
     });
   }, []);
 
+  const t = translations[lang];
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
@@ -44,21 +46,20 @@ const ReportFraudPage = () => {
             </div>
           </div>
           <h1 className="text-3xl font-bold text-foreground">
-            Report a Fraud
+            {t.reportTitle}
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Your report helps protect others from scams and fraudulent activities.
-            All submissions are confidential and securely handled.
+            {t.reportSubtitle}
           </p>
         </div>
 
         {/* 🔒 Security Notice */}
         <div className="flex items-start gap-3 bg-yellow-100 border border-yellow-300 p-4 rounded-lg">
           <AlertTriangle className="text-yellow-600 mt-1" size={20} />
-          <p className="text-sm text-yellow-800">
-            Please provide accurate details. False reporting may lead to legal consequences.
-            Do not share sensitive banking passwords or OTPs in this form.
-          </p>
+          <div className="text-sm text-yellow-800">
+            <p>{t.securityNotice}</p>
+            <p className="mt-1">{t.securityNoticeDetails}</p>
+          </div>
         </div>
 
         {/* ✅ Success Message */}
@@ -66,10 +67,10 @@ const ReportFraudPage = () => {
           <div className="bg-green-100 border border-green-300 p-6 rounded-xl text-center space-y-4">
             <CheckCircle className="text-green-600 mx-auto" size={40} />
             <h2 className="text-xl font-semibold text-green-800">
-              Report Submitted Successfully
+              {t.reportSubmittedTitle}
             </h2>
             <p className="text-green-700 text-sm">
-              Thank you for helping build a safer community. Our team will review your report shortly.
+              {t.reportSubmittedMessage}
             </p>
           </div>
         ) : (
@@ -83,27 +84,24 @@ const ReportFraudPage = () => {
           {/* Fraud Type */}
           <div>
             <label className="block text-sm font-semibold mb-2">
-              Fraud Category
+              {t.fraudCategoryLabel}
             </label>
             <select className="w-full border border-input rounded-lg p-3 bg-background focus:ring-2 focus:ring-primary/40 outline-none">
-              <option>Online Scam</option>
-              <option>UPI / Payment Fraud</option>
-              <option>Identity Theft</option>
-              <option>Investment Scam</option>
-              <option>Job Fraud</option>
-              <option>Other</option>
+              {t.fraudOptions.map((opt) => (
+                <option key={opt}>{opt}</option>
+              ))}
             </select>
           </div>
 
           {/* Description */}
           <div>
             <label className="block text-sm font-semibold mb-2">
-              Describe the Incident
+              {t.describeLabel}
             </label>
             <textarea
               rows={5}
               required
-              placeholder="Provide detailed information about what happened..."
+              placeholder={t.descriptionPlaceholder}
               className="w-full border border-input rounded-lg p-3 bg-background focus:ring-2 focus:ring-primary/40 outline-none"
             />
           </div>
@@ -111,7 +109,7 @@ const ReportFraudPage = () => {
           {/* Upload Evidence */}
           <div>
             <label className="block text-sm font-semibold mb-2">
-              Upload Evidence (Optional)
+              {t.uploadEvidenceLabel}
             </label>
             <div className="flex items-center gap-3 border border-dashed border-input p-4 rounded-lg">
               <Upload size={20} className="text-muted-foreground" />
@@ -122,13 +120,12 @@ const ReportFraudPage = () => {
           {/* Urgency */}
           <div>
             <label className="block text-sm font-semibold mb-2">
-              Urgency Level
+              {t.urgencyLabel}
             </label>
             <select className="w-full border border-input rounded-lg p-3 bg-background focus:ring-2 focus:ring-primary/40 outline-none">
-              <option>Low</option>
-              <option>Medium</option>
-              <option>High</option>
-              <option>Critical</option>
+              {t.urgencyOptions.map((u) => (
+                <option key={u}>{u}</option>
+              ))}
             </select>
           </div>
 
@@ -140,7 +137,7 @@ const ReportFraudPage = () => {
               onChange={() => setAnonymous(!anonymous)}
             />
             <label className="text-sm">
-              Submit anonymously
+              {t.submitAnonymously}
             </label>
           </div>
 
@@ -149,7 +146,7 @@ const ReportFraudPage = () => {
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-semibold mb-2">
-                  Full Name
+                  {t.fullNameLabel}
                 </label>
                 <input
                   type="text"
@@ -160,7 +157,7 @@ const ReportFraudPage = () => {
 
               <div>
                 <label className="block text-sm font-semibold mb-2">
-                  Phone / Email
+                  {t.contactLabel}
                 </label>
                 <input
                   type="text"
@@ -177,7 +174,7 @@ const ReportFraudPage = () => {
             className="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition-colors"
           >
             <Send size={18} />
-            Submit Report
+            {t.submitReportButton}
           </button>
 
         </form>

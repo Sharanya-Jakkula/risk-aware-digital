@@ -17,34 +17,30 @@ const Footer = ({ lang }: FooterProps) => {
         <div>
           <div className="flex items-center gap-2 mb-3">
             <ShieldCheck size={20} className="text-primary-foreground" />
-            <span className="font-semibold">GramRakshak</span>
+            <span className="font-semibold">{t.brandName}</span>
           </div>
-          <p className="text-primary-foreground/80">
-            AI-powered rural digital fraud detection and cyber awareness platform
-            designed to protect citizens from financial scams.
-          </p>
+          <p className="text-primary-foreground/80">{t.brandDescription}</p>
         </div>
 
         {/* Quick Links */}
         <div>
-          <h4 className="font-semibold mb-3">Quick Links</h4>
+          <h4 className="font-semibold mb-3">{t.quickLinksTitle}</h4>
           <ul className="space-y-2 text-primary-foreground/80">
-            <li className="hover:text-white cursor-pointer transition">Analyze Message</li>
-            <li className="hover:text-white cursor-pointer transition">Fraud Stories</li>
-            <li className="hover:text-white cursor-pointer transition">Awareness Center</li>
-            <li className="hover:text-white cursor-pointer transition">FAQs</li>
+            {t.quickLinks.map((q) => (
+              <li key={q} className="hover:text-white cursor-pointer transition">{q}</li>
+            ))}
           </ul>
         </div>
 
         {/* Emergency & Support */}
         <div>
-          <h4 className="font-semibold mb-3">Emergency Support</h4>
+          <h4 className="font-semibold mb-3">{t.emergencySupportTitle}</h4>
           <ul className="space-y-3 text-primary-foreground/80">
 
             <li className="flex items-center gap-2">
               <Phone size={14} className="text-red-300" />
               <a href="tel:1930" className="font-medium text-red-300 hover:text-red-200 transition">
-                Call 1930 (Cybercrime Helpline)
+                {t.callText}
               </a>
             </li>
 
@@ -55,7 +51,7 @@ const Footer = ({ lang }: FooterProps) => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 hover:text-white transition"
               >
-                National Cybercrime Portal
+                {t.nationalPortalText}
                 <ExternalLink size={14} />
               </a>
             </li>
@@ -65,11 +61,11 @@ const Footer = ({ lang }: FooterProps) => {
 
         {/* About / Credits */}
         <div>
-          <h4 className="font-semibold mb-3">About</h4>
+          <h4 className="font-semibold mb-3">{t.aboutTitle}</h4>
           <p className="text-primary-foreground/80 mb-2">{t.team}</p>
           <p className="text-primary-foreground/80">{t.organizer}</p>
           <p className="mt-4 text-xs text-primary-foreground/60">
-            © {new Date().getFullYear()} GramRakshak. All rights reserved.
+            © {new Date().getFullYear()} {t.brandName}. All rights reserved.
           </p>
         </div>
 
@@ -77,8 +73,7 @@ const Footer = ({ lang }: FooterProps) => {
 
       {/* Bottom Disclaimer */}
       <div className="mt-10 border-t border-primary-foreground/20 pt-6 text-center text-xs text-primary-foreground/60">
-        This platform provides AI-based risk assessment and awareness guidance.
-        Always verify suspicious messages before taking action.
+        {t.bottomDisclaimer}
       </div>
     </footer>
   );

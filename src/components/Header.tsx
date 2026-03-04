@@ -46,7 +46,7 @@ const Header = ({ lang, onToggleLang }: HeaderProps) => {
           <div className="rounded-xl bg-primary-foreground/15 p-2 transition-transform hover:scale-105">
             <ShieldCheck size={26} strokeWidth={1.8} />
           </div>
-          <span className="text-lg font-semibold">GramRakshak</span>
+          <span className="text-lg font-semibold">{t.brandName}</span>
         </Link>
 
         {/* CENTER: Main Navigation (Desktop Only) */}
@@ -72,7 +72,7 @@ const Header = ({ lang, onToggleLang }: HeaderProps) => {
             href="https://cybercrime.gov.in"
             target="_blank"
             rel="noopener noreferrer"
-            title="Report Cybercrime"
+            title={t.nationalPortalText}
             className="inline-flex items-center justify-center rounded-md bg-danger p-2 text-danger-foreground hover:opacity-95"
           >
             <ShieldAlert size={18} />
@@ -106,7 +106,7 @@ const Header = ({ lang, onToggleLang }: HeaderProps) => {
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition"
                   >
                     <HelpCircle size={16} />
-                    FAQs
+                    {t.menuFaq}
                   </button>
 
                   <button
@@ -114,7 +114,7 @@ const Header = ({ lang, onToggleLang }: HeaderProps) => {
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition"
                   >
                     <HelpCircle size={16} />
-                    Reporting Guide
+                    {t.menuReportingGuide}
                   </button>
 
                   <button
@@ -122,7 +122,7 @@ const Header = ({ lang, onToggleLang }: HeaderProps) => {
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition"
                   >
                     <HelpCircle size={16} />
-                    About
+                    {t.menuAbout}
                   </button>
 
                 </div>

@@ -39,13 +39,10 @@ const ReportingGuide = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold">
-            Live Cybercrime Reporting Guide
-          </h1>
+          <h1 className="text-3xl font-bold">{t.reportingGuideTitle}</h1>
 
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Act quickly if you suspect fraud. Follow these official steps to
-            protect your money and report cybercrime effectively.
+            {t.reportingGuideSubtitle}
           </p>
         </div>
 
@@ -53,17 +50,11 @@ const ReportingGuide = () => {
         <section className="bg-card border border-border rounded-2xl p-8 shadow-sm">
           <h2 className="text-xl font-semibold mb-8 flex items-center gap-2">
             <Clock size={20} className="text-primary" />
-            Immediate Action Steps
+            {t.immediateStepsTitle}
           </h2>
 
           <div className="grid gap-6 md:grid-cols-2">
-            {[
-              "Do NOT reply or click any suspicious links.",
-              "Take screenshots of messages and transaction details.",
-              "Note sender number, UPI ID, and timestamps.",
-              "Immediately contact your bank if money was debited.",
-              "Call 1930 within 30 minutes for faster recovery.",
-            ].map((step, index) => (
+            {t.immediateSteps.map((step, index) => (
               <div
                 key={index}
                 className="flex gap-4 p-5 rounded-xl border border-border bg-background hover:shadow-md transition duration-300"
@@ -81,16 +72,11 @@ const ReportingGuide = () => {
         <section className="bg-card border border-border rounded-2xl p-8 shadow-sm">
           <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
             <FileText size={20} className="text-primary" />
-            What to Include in Your Report
+            {t.whatToIncludeTitle}
           </h2>
 
           <div className="grid gap-4">
-            {[
-              "Complete message text (copy & paste).",
-              "Sender number and time of message.",
-              "UPI ID, transaction ID, or suspicious links.",
-              "Screenshots of conversations and payment receipts.",
-            ].map((item, index) => (
+            {t.whatToIncludeItems.map((item, index) => (
               <div
                 key={index}
                 className="flex items-start gap-3 text-sm text-muted-foreground"
@@ -107,38 +93,17 @@ const ReportingGuide = () => {
 
         {/* TIMELINE FLOW */}
         <section className="bg-card border border-border rounded-2xl p-8 shadow-sm">
-          <h2 className="text-xl font-semibold mb-6">
-            Reporting Flow Timeline
-          </h2>
+          <h2 className="text-xl font-semibold mb-6">{t.reportingFlowTitle}</h2>
 
           <div className="space-y-6 text-sm text-muted-foreground">
-            <div className="flex gap-4">
-              <div className="w-2 bg-primary rounded-full"></div>
-              <div>
-                <strong>Step 1:</strong> Call 1930 immediately.
+            {t.flowSteps.map((text, i) => (
+              <div key={i} className="flex gap-4">
+                <div className="w-2 bg-primary rounded-full"></div>
+                <div>
+                  <strong>{t.stepPrefix} {i + 1}:</strong> {text}
+                </div>
               </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="w-2 bg-primary rounded-full"></div>
-              <div>
-                <strong>Step 2:</strong> Visit National Cybercrime Portal.
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="w-2 bg-primary rounded-full"></div>
-              <div>
-                <strong>Step 3:</strong> Submit complaint with full evidence.
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="w-2 bg-primary rounded-full"></div>
-              <div>
-                <strong>Step 4:</strong> Track complaint status online.
-              </div>
-            </div>
+            ))}
           </div>
         </section>
 
@@ -148,7 +113,7 @@ const ReportingGuide = () => {
             <Phone size={40} />
           </div>
 
-          <h2 className="text-2xl font-bold">Emergency Helpline</h2>
+          <h2 className="text-2xl font-bold">{t.emergencyTitle}</h2>
 
           <p className="text-lg font-semibold">
             {t.helplineNumber} — {t.helpline}
@@ -156,10 +121,10 @@ const ReportingGuide = () => {
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
-              href="tel:1930"
+              href={`tel:${t.helplineNumber}`}
               className="bg-white text-red-600 font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition"
             >
-              Call 1930 Now
+              {t.callNowButton}
             </a>
 
             <a
@@ -168,15 +133,12 @@ const ReportingGuide = () => {
               rel="noopener noreferrer"
               className="border border-white px-6 py-3 rounded-xl hover:bg-white hover:text-red-600 transition flex items-center justify-center gap-2"
             >
-              Visit Cybercrime Portal
+              {t.visitPortalButton}
               <ExternalLink size={16} />
             </a>
           </div>
 
-          <p className="text-xs opacity-80">
-            Reporting within the first 30 minutes significantly increases the
-            chances of fund recovery.
-          </p>
+          <p className="text-xs opacity-80">{t.recoveryNote}</p>
         </section>
 
       </div>
