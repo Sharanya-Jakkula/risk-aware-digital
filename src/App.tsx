@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import ReportFraudPage from "@/pages/ReportFraudPage";
 import Contact from "@/pages/Contact";
 import StatisticsPage from "@/pages/StatisticsPage";
+import AnalyzePage from "@/pages/AnalyzePage";
 
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
       <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/analyze" element={<AnalyzePage />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/report" element={<ReportFraudPage />} />
           <Route path="/reporting-guide" element={<ReportingGuide />} />
