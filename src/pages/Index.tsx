@@ -7,7 +7,7 @@ import FraudStoriesSection from "@/components/FraudStoriesSection";
 import { analyzeMessage, AnalysisResult } from "@/lib/analyzer";
 import { analyzeRemote } from "@/lib/api";
 import { Lang } from "@/lib/translations";
-import { Carousel } from "@/components/ui/carousel";
+
 
 const Index = () => {
   const [lang, setLang] = useState<Lang>(() => {
@@ -18,6 +18,7 @@ const Index = () => {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [originalMessage, setOriginalMessage] = useState("");
   const [lastMessage, setLastMessage] = useState<string | null>(null);
+  const [message, setMessage] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [errorInfo, setErrorInfo] = useState<string | null>(null);
@@ -64,8 +65,70 @@ const Index = () => {
       });
   }, []);
 
+  // handle image file analysis by uploading to server endpoint
+  const handleAnalyzeFile = useCallback((file: File) => {
+    setIsAnalyzing(true);
+    setResult(null);
+    setError(null);
+    setErrorInfo(null);
+    setLastMessage(`[image] ${file.name}`);
+
+    const base = import.meta.env.VITE_API_URL || "http://localhost:8080";
+    const url = `${base}/api/analyze-image`;
+
+    const form = new FormData();
+    form.append("file", file);
+
+    fetch(url, { method: "POST", body: form })
+      .then(async (resp) => {
+        if (!resp.ok) {
+          const text = await resp.text();
+          throw new Error(`Image analyze failed: ${resp.status} ${text}`);
+        }
+        return resp.json();
+      })
+      .then((data) => {
+        // map remote response shape to AnalysisResult
+        const mapped: AnalysisResult = {
+          score: data.risk_score ?? data.spam_score ?? 0,
+          classification:
+            typeof data.risk_level === "string"
+              ? data.risk_level.toLowerCase() === "safe"
+                ? "safe"
+                : data.risk_level.toLowerCase() === "high risk" ||
+                  data.risk_level.toLowerCase() === "high_risk" ||
+                  data.risk_level.toLowerCase() === "highrisk"
+                ? "highRisk"
+                : "suspicious"
+              : "suspicious",
+          fraudType: data.fraud_type ?? "",
+          keywords: data.entities_detected ?? [],
+          explanation: Array.isArray(data.reasoning) ? data.reasoning.join(" ") : data.reasoning || "",
+          message: data.message || "",
+          spam_score: data.spam_score,
+          fraud_confidence: data.fraud_confidence,
+          risk_score: data.risk_score,
+          risk_level: data.risk_level,
+          entities_detected: data.entities_detected,
+          reasoning: data.reasoning,
+          safety_advice: data.safety_advice,
+          helpline: data.helpline,
+          timestamp: data.timestamp,
+        };
+
+        setResult(mapped);
+        setOriginalMessage(mapped.message || `[image] ${file.name}`);
+      })
+      .catch((err) => {
+        console.warn("image analyze failed", err);
+        setError("Image analyze failed; please try again.");
+        setErrorInfo(typeof err === "string" ? err : JSON.stringify(err));
+      })
+      .finally(() => setIsAnalyzing(false));
+  }, []);
+
   return (
-  <Layout lang={lang} onToggleLang={toggleLang}>
+  <Layout lang={lang} onToggleLang={toggleLang} onNavbarAnalyze={() => handleAnalyze(message)}>
     
     {/* ================= ANALYZER SECTION ================= */}
     <section className="bg-background py-20">
@@ -74,8 +137,11 @@ const Index = () => {
     {/* <Carousel/> */}
         <MessageInput
           lang={lang}
+          message={message}
+          onMessageChange={setMessage}
           onAnalyze={handleAnalyze}
           isAnalyzing={isAnalyzing}
+          onAnalyzeFile={handleAnalyzeFile}
         />
 
         {error && (

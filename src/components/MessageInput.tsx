@@ -5,12 +5,14 @@ import translations from "@/lib/translations";
 
 interface MessageInputProps {
   lang: Lang;
+  message: string;
+  onMessageChange: (msg: string) => void;
   onAnalyze: (message: string) => void;
+  onAnalyzeFile?: (file: File) => void;
   isAnalyzing: boolean;
 }
 
-const MessageInput = ({ lang, onAnalyze, isAnalyzing }: MessageInputProps) => {
-  const [message, setMessage] = useState("");
+const MessageInput = ({ lang, message, onMessageChange, onAnalyze, onAnalyzeFile, isAnalyzing }: MessageInputProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const t = translations[lang];
@@ -42,7 +44,20 @@ const MessageInput = ({ lang, onAnalyze, isAnalyzing }: MessageInputProps) => {
     if (files && files.length > 0) {
       const file = files[0];
       console.log("File selected:", file.name);
-      // Handle file upload/processing here
+      if (file.type.startsWith("image/") && onAnalyzeFile) {
+        onAnalyzeFile(file);
+      } else {
+        // non-image files could be handled differently (text/pdf)
+        // For now attempt to read text files and analyze
+        if (file.type === "text/plain") {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const txt = String(reader.result || "");
+            onAnalyze(txt);
+          };
+          reader.readAsText(file);
+        }
+      }
     }
   };
 
@@ -53,7 +68,7 @@ const MessageInput = ({ lang, onAnalyze, isAnalyzing }: MessageInputProps) => {
       </label>
       <textarea
         value={message}
-        onChange={(e) => setMessage(e.target.value.slice(0, maxChars))}
+        onChange={(e) => onMessageChange(e.target.value.slice(0, maxChars))}
         placeholder={t.placeholder}
         rows={5}
         className="w-full resize-none rounded-lg border border-input bg-background p-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-shadow"
@@ -88,7 +103,7 @@ const MessageInput = ({ lang, onAnalyze, isAnalyzing }: MessageInputProps) => {
             type="file"
             onChange={handleFileChange}
             className="hidden"
-            accept=".txt,.pdf,.doc,.docx"
+            accept="image/*,.txt,.pdf,.doc,.docx"
           />
           <button
             onClick={handleSubmit}

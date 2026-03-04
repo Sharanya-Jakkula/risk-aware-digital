@@ -14,13 +14,35 @@ import translations from "@/lib/translations";
 interface HeaderProps {
   lang: Lang;
   onToggleLang: () => void;
+  onAnalyzeClick?: () => void;
 }
 
-const Header = ({ lang, onToggleLang }: HeaderProps) => {
-  const t = translations[lang];
+const Header = ({ lang, onToggleLang, onAnalyzeClick }: HeaderProps) => {
+
+    const t = translations[lang];
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const closeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setIsMenuOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    closeTimeoutRef.current = setTimeout(() => {
+      setIsMenuOpen(false);
+    }, 500);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -50,18 +72,27 @@ const Header = ({ lang, onToggleLang }: HeaderProps) => {
         </Link>
 
         {/* CENTER: Main Navigation (Desktop Only) */}
-        {/* <div className="hidden md:flex items-center gap-6 text-sm font-medium">
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium">
   
-          <button onClick={() => navigate("/history")} className="hover:underline">
-            History
+          <button
+            onClick={() => {
+              if (onAnalyzeClick) {
+                onAnalyzeClick();
+              } else {
+                navigate("/history");
+              }
+            }}
+            className="transition hover:opacity-80"
+          >
+            Analyze
           </button>
-          <button onClick={() => navigate("/awareness")} className="hover:underline">
-            Awareness
+          <button onClick={() => navigate("/awareness")} className="transition hover:opacity-80">
+            Stats
           </button>
-          <button onClick={() => navigate("/trends")} className="hover:underline">
-            Trends
+          <button onClick={() => navigate("/trends")} className="transition hover:opacity-80">
+            Contact
           </button>
-        </div> */}
+        </div>
 
         {/* RIGHT SECTION */}
         <div className="flex items-center gap-3">
@@ -89,10 +120,15 @@ const Header = ({ lang, onToggleLang }: HeaderProps) => {
           </button>
 
           {/* Menu Dropdown */}
-          <div ref={menuRef} className="relative">
+          <div
+            ref={menuRef}
+            className="relative"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center justify-center rounded-lg border border-primary-foreground/30 p-2 hover:bg-primary-foreground/10 transition"
+              className="flex items-center justify-center rounded-lg border border-primary-foreground/30 p-2 transition hover:bg-primary-foreground/20 hover:border-primary-foreground/50 hover:scale-110"
             >
               <Menu size={18} />
             </button>
