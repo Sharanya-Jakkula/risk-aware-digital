@@ -1,30 +1,31 @@
 import { ShieldAlert, ArrowRight } from "lucide-react";
+import { Lang } from "@/lib/translations";
+import translations from "@/lib/translations";
 
-const fraudStories = [
-  {
-    id: 1,
-    title: "UPI Scam – Fake Payment Screenshot",
-    description:
-      "A seller was tricked by a fraudster who showed a fake UPI payment screenshot. The seller handed over the product without verifying the transaction.",
-    category: "UPI Fraud",
-  },
-  {
-    id: 2,
-    title: "OTP Sharing Scam",
-    description:
-      "A victim received a call pretending to be from a bank and was asked to share an OTP. Within minutes, money was withdrawn from the account.",
-    category: "Banking Fraud",
-  },
-  {
-    id: 3,
-    title: "Job Offer Scam",
-    description:
-      "A fake company offered a high-paying remote job and asked for a registration fee. After payment, all communication stopped.",
-    category: "Job Fraud",
-  },
-];
+const FraudStoriesSection = ({ lang }: { lang: Lang }) => {
+  const t = translations[lang];
 
-const FraudStoriesSection = () => {
+  const fraudStories = [
+    {
+      id: 1,
+      title: t.story1Title,
+      description: t.story1Description,
+      category: t.story1Category,
+    },
+    {
+      id: 2,
+      title: t.story2Title,
+      description: t.story2Description,
+      category: t.story2Category,
+    },
+    {
+      id: 3,
+      title: t.story3Title,
+      description: t.story3Description,
+      category: t.story3Category,
+    },
+  ];
+
   return (
     <section className="pt-6 pb-10 px-6 bg-blue-50/40">
       {/* Section Header */}
@@ -36,14 +37,9 @@ const FraudStoriesSection = () => {
           </div>
         </div>
 
-        <h2 className="text-2xl font-bold mb-2 text-foreground">
-          Real Fraud Stories
-        </h2>
+        <h2 className="text-2xl font-bold mb-2 text-foreground">{t.fraudStoriesTitle}</h2>
 
-        <p className="text-sm text-muted-foreground">
-          Learn from real-life cyber fraud cases to protect yourself and your
-          loved ones from digital threats.
-        </p>
+        <p className="text-sm text-muted-foreground">{t.fraudStoriesSubtitle}</p>
       </div>
 
       {/* Stories Grid */}
@@ -67,7 +63,7 @@ const FraudStoriesSection = () => {
             </p>
 
             <button className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
-              Read More <ArrowRight size={16} />
+              {t.readMore} <ArrowRight size={16} />
             </button>
           </div>
         ))}

@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Lang } from "@/lib/translations";
+import translations from "@/lib/translations";
 
 interface StatItem {
   label: string;
@@ -8,6 +10,12 @@ interface StatItem {
 }
 
 const StatisticsPanel = () => {
+  const [lang, setLang] = useState<Lang>(() => {
+    const saved = localStorage.getItem("gramrakshak-lang");
+    return (saved as Lang) || "en";
+  });
+
+  const t = translations[lang];
   const [stats, setStats] = useState<StatItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,10 +34,10 @@ const StatisticsPanel = () => {
         const data = await resp.json();
 
         const transformedStats: StatItem[] = [
-          { label: "Total Analyzed", value: data.total_messages_analyzed || 0 },
-          { label: "High Risk", value: data.high_risk || 0 },
-          { label: "Suspicious", value: data.suspicious || 0 },
-          { label: "Safe", value: data.safe || 0 },
+          { label: t.totalAnalyzed, value: data.total_messages_analyzed || 0 },
+          { label: t.highRiskCount, value: data.high_risk || 0 },
+          { label: t.suspiciousCount, value: data.suspicious || 0 },
+          { label: t.safeCount, value: data.safe || 0 },
         ];
 
         setStats(transformedStats);
@@ -68,10 +76,22 @@ const StatisticsPanel = () => {
   return (
     <section className="w-full bg-blue-50 py-12 px-4">
       <h2 className="text-2xl font-bold text-blue-800 mb-8 text-center">
-        Our Achievements
+        {t.ourAchievements}
       </h2>
 
-      {loading && <div className="text-gray-600 py-8 text-center">Loading statistics...</div>}
+      {loading && (
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 px-4">
+          {[...Array(4)].map((_, index) => (
+            <div
+              key={index}
+              className="bg-white shadow-lg rounded-xl p-5 flex flex-col items-center animate-pulse"
+            >
+              <div className="h-9 w-20 bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200 bg-[length:200%_100%] animate-shimmer rounded mb-1"></div>
+              <div className="h-4 w-24 bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200 bg-[length:200%_100%] animate-shimmer rounded"></div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {error && <div className="text-red-600 py-8 text-center">Error loading statistics: {error}</div>}
 

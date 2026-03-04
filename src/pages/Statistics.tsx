@@ -1,5 +1,7 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { Lang } from "@/lib/translations";
+import translations from "@/lib/translations";
 
 interface StatsProps {
   data: {
@@ -13,6 +15,13 @@ interface StatsProps {
 }
 
 const Statistics: React.FC<StatsProps> = ({ data }) => {
+  const [lang, setLang] = useState<Lang>(() => {
+    const saved = localStorage.getItem("gramrakshak-lang");
+    return (saved as Lang) || "en";
+  });
+
+  const t = translations[lang];
+
   const {
     total_messages_analyzed,
     high_risk,
@@ -30,27 +39,27 @@ const Statistics: React.FC<StatsProps> = ({ data }) => {
       <div className="max-w-6xl mx-auto px-6 space-y-12">
 
         {/* ================= HEADER ================= */}
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-3 animate-in fade-in duration-500">
           <h2 className="text-3xl font-bold text-blue-800">
-            Fraud Analysis Statistics
+            {t.statisticsTitle}
           </h2>
           <p className="text-gray-600">
-            Overview of analyzed messages and detected fraud patterns
+            {t.statisticsSubtitle}
           </p>
         </div>
 
         {/* ================= SUMMARY CARDS ================= */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <StatCard title="Total Analyzed" value={total_messages_analyzed} />
-          <StatCard title="High Risk" value={high_risk} />
-          <StatCard title="Suspicious" value={suspicious} />
-          <StatCard title="Safe" value={safe} />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+          <StatCard title={t.totalAnalyzed} value={total_messages_analyzed} />
+          <StatCard title={t.highRiskCount} value={high_risk} />
+          <StatCard title={t.suspiciousCount} value={suspicious} />
+          <StatCard title={t.safeCount} value={safe} />
         </div>
 
         {/* ================= RISK DISTRIBUTION ================= */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 space-y-6">
+        <div className="bg-white rounded-2xl shadow-lg p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
           <h3 className="text-xl font-semibold text-blue-700">
-            Risk Distribution
+            {t.riskDistribution}
           </h3>
 
           <ProgressBar
@@ -73,9 +82,9 @@ const Statistics: React.FC<StatsProps> = ({ data }) => {
         </div>
 
         {/* ================= FRAUD TYPE DISTRIBUTION ================= */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 space-y-6">
+        <div className="bg-white rounded-2xl shadow-lg p-8 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-300">
           <h3 className="text-xl font-semibold text-blue-700">
-            Fraud Type Distribution
+            {t.fraudTypeDistribution}
           </h3>
 
           {Object.entries(fraud_type_distribution).map(([type, count]) => (
@@ -89,21 +98,15 @@ const Statistics: React.FC<StatsProps> = ({ data }) => {
         </div>
 
         {/* ================= AVERAGE RISK SCORE ================= */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 text-center space-y-4">
+        <div className="bg-white rounded-2xl shadow-lg p-8 text-center space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-400">
           <h3 className="text-xl font-semibold text-blue-700">
-            Average Risk Score
+            {t.averageRiskScore}
           </h3>
 
-          <div className="relative w-40 h-40 mx-auto">
-            <div className="absolute inset-0 rounded-full bg-blue-100 flex items-center justify-center">
-              <span className="text-3xl font-bold text-blue-800">
-                {average_risk_score}
-              </span>
-            </div>
-          </div>
+          <RiskScoreCircle score={average_risk_score} />
 
           <p className="text-gray-600">
-            Overall average risk across analyzed messages
+            {t.overallAverage}
           </p>
         </div>
 
@@ -116,12 +119,49 @@ export default Statistics;
 
 /* ================= SMALL COMPONENTS ================= */
 
-const StatCard = ({ title, value }: { title: string; value: number }) => (
-  <div className="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-lg transition">
-    <p className="text-gray-500 text-sm">{title}</p>
-    <h4 className="text-2xl font-bold text-blue-800 mt-2">{value}</h4>
-  </div>
-);
+const StatCard = ({ title, value }: { title: string; value: number }) => {
+  const [count, setCount] = useState(0);
+  const countRef = useRef(0);
+  const animationRef = useRef<number>();
+
+  useEffect(() => {
+    const duration = 1500; // 1.5 seconds
+    const startTime = Date.now();
+    const endValue = value;
+
+    const animate = () => {
+      const now = Date.now();
+      const progress = Math.min((now - startTime) / duration, 1);
+      
+      // Easing function for smooth animation
+      const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+      const currentValue = Math.floor(easeOutQuart * endValue);
+      
+      setCount(currentValue);
+      
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        setCount(endValue);
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [value]);
+
+  return (
+    <div className="bg-white rounded-2xl shadow-md p-6 text-center hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+      <p className="text-gray-500 text-sm">{title}</p>
+      <h4 className="text-2xl font-bold text-blue-800 mt-2">{count}</h4>
+    </div>
+  );
+};
 
 const ProgressBar = ({
   label,
@@ -147,3 +187,67 @@ const ProgressBar = ({
     </div>
   </div>
 );
+
+const RiskScoreCircle = ({ score }: { score: number }) => {
+  const [displayScore, setDisplayScore] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const duration = 1500;
+    const startTime = Date.now();
+
+    const animate = () => {
+      const now = Date.now();
+      const elapsed = now - startTime;
+      const progressValue = Math.min(elapsed / duration, 1);
+      
+      // Easing function
+      const easeOutQuart = 1 - Math.pow(1 - progressValue, 4);
+      
+      setDisplayScore(parseFloat((easeOutQuart * score).toFixed(1)));
+      setProgress(easeOutQuart * 100);
+      
+      if (progressValue < 1) {
+        requestAnimationFrame(animate);
+      } else {
+        setDisplayScore(score);
+        setProgress(100);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [score]);
+
+  return (
+    <div className="relative w-40 h-40 mx-auto">
+      <svg className="transform -rotate-90 w-40 h-40">
+        <circle
+          cx="80"
+          cy="80"
+          r="70"
+          stroke="currentColor"
+          strokeWidth="8"
+          fill="transparent"
+          className="text-blue-100"
+        />
+        <circle
+          cx="80"
+          cy="80"
+          r="70"
+          stroke="currentColor"
+          strokeWidth="8"
+          fill="transparent"
+          strokeDasharray={440}
+          strokeDashoffset={440 - (440 * progress) / 100}
+          className="text-blue-600 transition-all duration-500"
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className="text-3xl font-bold text-blue-800">
+          {displayScore}
+        </span>
+      </div>
+    </div>
+  );
+};

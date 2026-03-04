@@ -52,8 +52,7 @@ const FAQPage = () => {
             {t.faqTitle}
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Find answers to common questions about reporting fraud,
-            safety guidelines, and how GramRakshak protects citizens.
+            {t.faqSubtitle}
           </p>
         </div>
 
@@ -65,7 +64,7 @@ const FAQPage = () => {
           />
           <input
             type="text"
-            placeholder="Search your question..."
+            placeholder={t.searchPlaceholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-input rounded-lg bg-background focus:outline-none focus:ring-2 focus:ring-primary/40"
@@ -77,7 +76,7 @@ const FAQPage = () => {
         <div className="space-y-4">
           {filteredFaqs.length === 0 && (
             <div className="text-center text-muted-foreground py-6">
-              No matching questions found.
+              {t.noMatchingQuestions}
             </div>
           )}
 
@@ -113,20 +112,20 @@ const FAQPage = () => {
         {/* 📞 Contact Support Section */}
         <div className="bg-muted/30 border border-border rounded-2xl p-6 text-center space-y-4">
           <h3 className="text-lg font-semibold text-foreground">
-            Still have questions?
+            {t.stillHaveQuestions}
           </h3>
           <p className="text-sm text-muted-foreground">
-            If you cannot find your answer here, please contact our support team.
+            {t.contactSupportMessage}
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 mt-4">
             <div className="flex items-center gap-2 text-sm text-foreground">
               <Phone size={16} />
-              <span>Helpline: 1800-XXX-XXXX</span>
+              <span>{t.helplineLabel}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-foreground">
               <Mail size={16} />
-              <span>support@gramrakshak.in</span>
+              <span>{t.emailLabel}</span>
             </div>
           </div>
         </div>
@@ -134,17 +133,17 @@ const FAQPage = () => {
        {/* 🚀 CTA Section */}
         <div className="text-center space-y-3">
           <h4 className="text-lg font-semibold text-foreground">
-            Help Us Build a Safer Community
+            {t.buildSaferCommunity}
           </h4>
           <p className="text-sm text-muted-foreground">
-            Report suspicious activities and stay informed about the latest fraud alerts.
+            {t.reportActivityMessage}
           </p>
          
          <Link
   to="/report"
   className="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
 >
-  Report a Fraud
+  {t.reportFraudButton}
 </Link>
 
         </div>

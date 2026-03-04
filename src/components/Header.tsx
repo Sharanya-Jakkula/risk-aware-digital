@@ -84,7 +84,7 @@ const Header = ({ lang, onToggleLang, onAnalyzeClick }: HeaderProps) => {
             }}
             className="transition hover:opacity-80"
           >
-            Analyze
+            {t.navAnalyze}
           </button>
           <button
             onClick={() => {
@@ -94,10 +94,10 @@ const Header = ({ lang, onToggleLang, onAnalyzeClick }: HeaderProps) => {
             }}
             className="transition hover:opacity-80"
           >
-            Stats
+            {t.navStats}
           </button>
           <button onClick={() => navigate("/faq")} className="transition hover:opacity-80">
-            FAQs
+            {t.navFAQs}
           </button>
         </div>
 

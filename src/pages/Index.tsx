@@ -31,7 +31,7 @@ const Index = () => {
       {/* ================= FRAUD STORIES SECTION ================= */}
       <section className="bg-background py-20">
         <div className="mx-auto w-full max-w-6xl px-4">
-          <FraudStoriesSection />
+          <FraudStoriesSection lang={lang} />
         </div>
       </section>
 
