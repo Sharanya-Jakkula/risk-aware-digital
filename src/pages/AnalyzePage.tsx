@@ -4,7 +4,7 @@ import Layout from "@/components/Layout";
 import MessageInput from "@/components/MessageInput";
 import ResultsSection from "@/components/ResultsSection";
 import { analyzeMessage, AnalysisResult } from "@/lib/analyzer";
-import { analyzeRemote } from "@/lib/api";
+import { analyzeRemote, analyzeVoiceRemote } from "@/lib/api";
 import { Lang } from "@/lib/translations";
 
 const AnalyzePage = () => {
@@ -62,8 +62,7 @@ const AnalyzePage = () => {
       });
   }, []);
 
-  const handleAnalyzeFile = useCallback((file: File) => {
-    setIsAnalyzing(true);
+  const handleAnalyzeFile = useCallback((file: File) => {    setIsAnalyzing(true);
     setResult(null);
     setError(null);
     setErrorInfo(null);
@@ -122,6 +121,30 @@ const AnalyzePage = () => {
       .finally(() => setIsAnalyzing(false));
   }, []);
 
+  const handleAnalyzeVoice = useCallback((transcript: string) => {
+    if (!transcript.trim()) return;
+    setIsAnalyzing(true);
+    setResult(null);
+    setError(null);
+    setErrorInfo(null);
+    setLastMessage(transcript);
+
+    analyzeVoiceRemote(transcript)
+      .then((analysisResult) => {
+        setResult(analysisResult);
+        setOriginalMessage(transcript);
+      })
+      .catch((err) => {
+        console.warn("voice remote analyze failed, falling back to local", err);
+        setError("Voice API failed; using local analysis instead.");
+        setErrorInfo(typeof err === "string" ? err : String(err));
+        const analysisResult = analyzeMessage(transcript);
+        setResult(analysisResult);
+        setOriginalMessage(transcript);
+      })
+      .finally(() => setIsAnalyzing(false));
+  }, []);
+
   return (
     <Layout lang={lang} onToggleLang={toggleLang}>
       <div className="mx-auto w-full max-w-3xl px-4 py-10 space-y-6">
@@ -132,6 +155,7 @@ const AnalyzePage = () => {
           onAnalyze={handleAnalyze}
           isAnalyzing={isAnalyzing}
           onAnalyzeFile={handleAnalyzeFile}
+          onAnalyzeVoice={handleAnalyzeVoice}
         />
 
         {error && (
