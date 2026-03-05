@@ -154,92 +154,45 @@ export default function VoiceButton({
   const isError = state === "error";
 
   return (
-    <div className={`relative inline-flex flex-col items-center gap-2 ${className}`}>
-      {/* ── Main button ── */}
-      <div className="relative inline-flex items-center justify-center">
-        {/* Ripple rings — only shown while listening */}
-        {isListening && (
-          <>
-            <span
-              className="absolute inset-0 rounded-full bg-red-400 animate-voice-ripple"
-              style={{ zIndex: 0 }}
-            />
-            <span
-              className="absolute inset-0 rounded-full bg-red-300 animate-voice-ripple-delay"
-              style={{ zIndex: 0 }}
-            />
-          </>
-        )}
-
-        <button
-          type="button"
-          onClick={handleClick}
-          disabled={disabled || !SUPPORTED}
-          aria-label={isListening ? "Stop listening" : "Start voice input"}
-          title={
-            !SUPPORTED
-              ? "Voice input not supported in this browser"
-              : isListening
-              ? "Tap to stop"
-              : "Tap to speak"
-          }
-          className={[
-            "relative z-10 flex h-11 w-11 items-center justify-center rounded-full shadow-md transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            isListening
-              ? "bg-red-500 text-white animate-voice-pulse scale-110"
-              : isError
-              ? "bg-orange-500 text-white"
-              : "bg-primary text-primary-foreground hover:opacity-90 active:scale-95",
-            (disabled || !SUPPORTED)
-              ? "opacity-40 cursor-not-allowed"
-              : "cursor-pointer",
-          ].join(" ")}
-        >
-          {isListening ? (
-            // Sound-bar visualiser (4 bars)
-            <span className="flex items-end gap-[2px] h-4">
-              <span className="w-[3px] h-full rounded-full bg-white origin-bottom animate-voice-bar-1" />
-              <span className="w-[3px] h-full rounded-full bg-white origin-bottom animate-voice-bar-2" />
-              <span className="w-[3px] h-full rounded-full bg-white origin-bottom animate-voice-bar-3" />
-              <span className="w-[3px] h-full rounded-full bg-white origin-bottom animate-voice-bar-4" />
-            </span>
-          ) : isError ? (
-            <MicOff size={18} />
-          ) : (
-            <Mic size={18} />
-          )}
-        </button>
-      </div>
-
-      {/* ── Status label ── */}
-      <span
-        className={[
-          "text-[11px] font-medium leading-tight transition-all",
-          isListening
-            ? "text-red-500"
-            : isError
-            ? "text-orange-500"
-            : "text-muted-foreground",
-        ].join(" ")}
-      >
-        {!SUPPORTED
-          ? "Not supported"
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={disabled || !SUPPORTED}
+      aria-label={isListening ? "Stop listening" : "Start voice input"}
+      title={
+        !SUPPORTED
+          ? "Voice input not supported in this browser"
           : isListening
-          ? "Listening…"
+          ? "Tap to stop"
+          : "Tap to speak"
+      }
+      className={[
+        "inline-flex items-center gap-2 rounded-lg transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "px-3 py-2 text-sm font-semibold",
+        isListening
+          ? "bg-red-500 text-white"
           : isError
-          ? "Error — retry"
-          : "Voice"}
-      </span>
-
-      {/* ── Interim transcript bubble ── */}
-      {isListening && interim && (
-        <div
-          className="absolute top-full mt-2 w-64 rounded-xl border border-border bg-card px-3 py-2 shadow-lg text-xs text-muted-foreground animate-fade-up z-20"
-          style={{ left: "50%", transform: "translateX(-50%)" }}
-        >
-          <span className="italic">&ldquo;{interim}&rdquo;</span>
-        </div>
+          ? "bg-orange-500 text-white"
+          : "bg-secondary text-secondary-foreground hover:opacity-90",
+        (disabled || !SUPPORTED)
+          ? "opacity-50 cursor-not-allowed"
+          : "cursor-pointer",
+        className,
+      ].join(" ")}
+    >
+      {isListening ? (
+        // Sound-bar visualiser (4 bars)
+        <span className="flex items-end gap-[2px] h-3">
+          <span className="w-[2px] h-full rounded-full bg-white origin-bottom animate-voice-bar-1" />
+          <span className="w-[2px] h-full rounded-full bg-white origin-bottom animate-voice-bar-2" />
+          <span className="w-[2px] h-full rounded-full bg-white origin-bottom animate-voice-bar-3" />
+          <span className="w-[2px] h-full rounded-full bg-white origin-bottom animate-voice-bar-4" />
+        </span>
+      ) : isError ? (
+        <MicOff size={16} />
+      ) : (
+        <Mic size={16} />
       )}
-    </div>
+    </button>
   );
 }
