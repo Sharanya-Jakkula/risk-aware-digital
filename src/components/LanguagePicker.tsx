@@ -103,8 +103,7 @@ export default function LanguagePicker() {
         aria-expanded={open}
       >
         <Globe size={14} />
-        <span className="hidden sm:inline">{activeLanguage.flag} {activeLanguage.english}</span>
-        <span className="sm:hidden">{activeLanguage.flag}</span>
+        <span>{activeLanguage.english}</span>
       </button>
 
       {/* Dropdown */}
