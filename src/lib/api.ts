@@ -41,7 +41,7 @@ export async function analyzeRemote(message: string): Promise<AnalysisResult> {
 
     // map the remote API response to our internal AnalysisResult shape.
     return {
-      score: data.risk_score ?? data.spam_score ?? 0,
+      score: data.spam_score ?? data.risk_score ?? 0,
       classification:
         typeof data.risk_level === "string"
           ? data.risk_level.toLowerCase() === "safe"
@@ -72,4 +72,58 @@ export async function analyzeRemote(message: string): Promise<AnalysisResult> {
     console.error("analyzeRemote failed", err);
     throw err;
   }
+}
+
+/**
+ * Analyze voice input — sends the transcribed text to /api/analyze
+ * using the same { message } body shape as analyzeRemote.
+ */
+export async function analyzeVoiceRemote(text: string): Promise<AnalysisResult> {
+  if (!text || typeof text !== "string") {
+    throw new Error("analyzeVoiceRemote requires a non-empty text string");
+  }
+
+  const base = import.meta.env.VITE_API_URL || DEFAULT_API_BASE;
+  const url = `${base}/api/analyze`;
+
+  const resp = await fetch(url, {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text }),
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text();
+    throw new Error(`Voice API failed: ${resp.status} ${errText}`);
+  }
+
+  const data = await resp.json();
+
+  return {
+    score: data.spam_score ?? data.risk_score ?? 0,
+    classification:
+      typeof data.risk_level === "string"
+        ? data.risk_level.toLowerCase() === "safe"
+          ? "safe"
+          : data.risk_level.toLowerCase() === "high risk" ||
+            data.risk_level.toLowerCase() === "high_risk" ||
+            data.risk_level.toLowerCase() === "highrisk"
+          ? "highRisk"
+          : "suspicious"
+        : "suspicious",
+    fraudType: data.fraud_type ?? "",
+    keywords: data.entities_detected ?? [],
+    explanation: Array.isArray(data.reasoning) ? data.reasoning.join(" ") : "",
+    message: data.message,
+    spam_score: data.spam_score,
+    fraud_confidence: data.fraud_confidence,
+    risk_score: data.risk_score,
+    risk_level: data.risk_level,
+    entities_detected: data.entities_detected,
+    reasoning: data.reasoning,
+    safety_advice: data.safety_advice,
+    helpline: data.helpline,
+    timestamp: data.timestamp,
+  };
 }

@@ -124,5 +124,21 @@ app.post('/api/analyze-image', upload.single('file'), async (req, res) => {
   }
 });
 
+// Voice analysis endpoint — accepts JSON { text: '...' } (transcription done client-side via Web Speech API)
+app.post('/api/analyze-voice', async (req, res) => {
+  try {
+    const text = (req.body && req.body.text) ? String(req.body.text).trim() : null;
+    if (!text) {
+      return res.status(400).json({ error: '"text" field is required' });
+    }
+    const result = analyzeText(text);
+    return res.json(result);
+  } catch (err) {
+    console.error('analyze-voice error', err);
+    return res.status(500).json({ error: String(err) });
+  }
+});
+
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log(`Analyze-image server listening on ${PORT}`));

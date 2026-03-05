@@ -1,7 +1,8 @@
 import { useState, useRef } from "react";
-import { Search, Loader2, Mic, FileUp } from "lucide-react";
+import { Search, Loader2, FileUp } from "lucide-react";
 import { Lang } from "@/lib/translations";
 import translations from "@/lib/translations";
+import VoiceButton from "@/components/VoiceButton";
 
 interface MessageInputProps {
   lang: Lang;
@@ -9,10 +10,11 @@ interface MessageInputProps {
   onMessageChange: (msg: string) => void;
   onAnalyze: (message: string) => void;
   onAnalyzeFile?: (file: File) => void;
+  onAnalyzeVoice?: (text: string) => void;
   isAnalyzing: boolean;
 }
 
-const MessageInput = ({ lang, message, onMessageChange, onAnalyze, onAnalyzeFile, isAnalyzing }: MessageInputProps) => {
+const MessageInput = ({ lang, message, onMessageChange, onAnalyze, onAnalyzeFile, onAnalyzeVoice, isAnalyzing }: MessageInputProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const t = translations[lang];
@@ -78,7 +80,20 @@ const MessageInput = ({ lang, message, onMessageChange, onAnalyze, onAnalyzeFile
           {message.length}/{maxChars} {t.characters}
         </span>
         <div className="flex items-center gap-2">
-          {/* <button
+          {/* Voice input button — Google-mic style */}
+          <VoiceButton
+            disabled={isAnalyzing}
+            onResult={(transcript) => {
+              onMessageChange(transcript.slice(0, maxChars));
+              if (onAnalyzeVoice) {
+                onAnalyzeVoice(transcript.trim());
+              } else {
+                onAnalyze(transcript.trim());
+              }
+            }}
+            onInterim={(interim) => onMessageChange(interim.slice(0, maxChars))}
+          />
+          {/* {
             onClick={handleMicClick}
             disabled={isAnalyzing}
             className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-all ${
@@ -89,7 +104,7 @@ const MessageInput = ({ lang, message, onMessageChange, onAnalyze, onAnalyzeFile
             title="Mic input"
           >
             <Mic size={16} />
-          </button> */}
+          } */}
           <button
             onClick={handleFileClick}
             disabled={isAnalyzing}
