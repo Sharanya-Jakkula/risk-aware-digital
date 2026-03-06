@@ -10,8 +10,7 @@ import NotFound from "./pages/NotFound";
 import ReportFraudPage from "@/pages/ReportFraudPage";
 import Contact from "@/pages/Contact";
 import StatisticsPage from "@/pages/StatisticsPage";
-import AnalyzePage from "@/pages/AnalyzePage";
-import { LangProvider } from "@/lib/LangContext";
+import AnalyzePage from "@/pages/AnalyzePage";import AwarenessPage from "./pages/AwarenessPage";import { LangProvider } from "@/lib/LangContext";
 import ScrollToTop from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
@@ -32,6 +31,7 @@ const App = () => (
             <Route path="/reporting-guide" element={<ReportingGuide />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/statistics" element={<StatisticsPage />} />
+            <Route path="/awareness" element={<AwarenessPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

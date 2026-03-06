@@ -153,6 +153,14 @@ const Header = ({ lang, onToggleLang, onAnalyzeClick }: HeaderProps) => {
                     {t.menuReportingGuide}
                   </button>
 
+                  <button
+                    onClick={() => handleMenuClick("/awareness")}
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition"
+                  >
+                    <HelpCircle size={16} />
+                    Awareness Center
+                  </button>
+
                 </div>
               </div>
             )}
