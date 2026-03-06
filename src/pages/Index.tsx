@@ -29,7 +29,7 @@ const Index = () => {
       <StatisticsPanel />
 
       {/* ================= FRAUD STORIES SECTION ================= */}
-      <section className="bg-background py-20">
+      <section id="fraud-stories" className="bg-background pt-8 pb-20">
         <div className="mx-auto w-full max-w-6xl px-4">
           <FraudStoriesSection lang={lang} />
         </div>

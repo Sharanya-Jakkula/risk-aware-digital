@@ -1,7 +1,7 @@
 import { Lang } from "@/lib/translations";
 import translations from "@/lib/translations";
 import { ExternalLink, Phone, ShieldCheck } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface FooterProps {
   lang: Lang;
@@ -11,24 +11,7 @@ const Footer = ({ lang }: FooterProps) => {
   const t = translations[lang];
   const navigate = useNavigate();
 
-  const handleQuickLinkClick = (linkText: string) => {
-    switch (linkText) {
-      case t.quickLinks[0]: // "Analyze Message"
-        navigate("/");
-        break;
-      case t.quickLinks[1]: // "Fraud Stories"
-        navigate("/");
-        break;
-      case t.quickLinks[2]: // "Stats"
-        navigate("/statistics");
-        break;
-      case t.quickLinks[3]: // "FAQs"
-        navigate("/faq");
-        break;
-      default:
-        navigate("/");
-    }
-  };
+  const quickLinkRoutes = ["/analyze", "/#fraud-stories", "/statistics", "/faq"];
 
   return (
     <footer className="border-t border-primary/30 bg-primary px-4 py-10 text-primary-foreground">
@@ -50,13 +33,14 @@ const Footer = ({ lang }: FooterProps) => {
         <div>
           <h4 className="font-semibold mb-3">{t.quickLinksTitle}</h4>
           <ul className="space-y-2 text-primary-foreground/80">
-            {t.quickLinks.map((q) => (
-              <li 
-                key={q} 
-                onClick={() => handleQuickLinkClick(q)}
-                className="hover:text-white cursor-pointer transition"
-              >
-                {q}
+            {t.quickLinks.map((q, index) => (
+              <li key={q}>
+                <Link
+                  to={quickLinkRoutes[index] ?? "/"}
+                  className="hover:text-white transition"
+                >
+                  {q}
+                </Link>
               </li>
             ))}
           </ul>

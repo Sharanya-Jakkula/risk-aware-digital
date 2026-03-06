@@ -12,6 +12,7 @@ import Contact from "@/pages/Contact";
 import StatisticsPage from "@/pages/StatisticsPage";
 import AnalyzePage from "@/pages/AnalyzePage";
 import { LangProvider } from "@/lib/LangContext";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
       <Sonner />
       <LangProvider>
         <BrowserRouter future={{ v7_relativeSplatPath: true, v7_startTransition: true }}>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/analyze" element={<AnalyzePage />} />

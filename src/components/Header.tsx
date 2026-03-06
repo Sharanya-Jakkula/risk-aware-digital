@@ -138,14 +138,6 @@ const Header = ({ lang, onToggleLang, onAnalyzeClick }: HeaderProps) => {
                 <div className="py-2">
 
                   <button
-                    onClick={() => handleMenuClick("/faq")}
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition"
-                  >
-                    <HelpCircle size={16} />
-                    {t.menuFaq}
-                  </button>
-
-                  <button
                     onClick={() => handleMenuClick("/report")}
                     className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted/50 transition"
                   >
